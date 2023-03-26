@@ -10,16 +10,18 @@ import javax.annotation.Nullable;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
 import fi.dy.masa.malilib.MaLiLibConfigs;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.language.IModInfo;
 
 public class StringUtils
 {
     public static String getModVersionString(String modId)
     {
-        for (net.fabricmc.loader.api.ModContainer container : net.fabricmc.loader.api.FabricLoader.getInstance().getAllMods())
+        for (IModInfo modInfo : ModList.get().getMods())
         {
-            if (container.getMetadata().getId().equals(modId))
+            if (modInfo.getModId().equals(modId))
             {
-                return container.getMetadata().getVersion().getFriendlyString();
+                return modInfo.getVersion().getQualifier();
             }
         }
 
@@ -282,7 +284,7 @@ public class StringUtils
                 // This used to be just MinecraftServer::getLevelName().
                 // Getting the name would now require an @Accessor for MinecraftServer.field_23784
                 String name = server.getSaveProperties().getLevelName();
-                return FileUtils.generateSimpleSafeFileName(name); 
+                return FileUtils.generateSimpleSafeFileName(name);
             }
         }
         else

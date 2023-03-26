@@ -2,7 +2,9 @@ package fi.dy.masa.malilib.util;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.Objects;
 
 /**
  * A wrapper around ItemStack, that implements hashCode() and equals().
@@ -87,12 +89,12 @@ public class ItemType
     {
         if (this.checkNBT())
         {
-            Identifier rl = Registry.ITEM.getId(this.stack.getItem());
+            Identifier rl = ForgeRegistries.ITEMS.getKey(this.stack.getItem());
             return rl + " " + this.stack.getNbt();
         }
         else
         {
-            return Registry.ITEM.getId(this.stack.getItem()).toString();
+            return Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(this.stack.getItem())).toString();
         }
     }
 }

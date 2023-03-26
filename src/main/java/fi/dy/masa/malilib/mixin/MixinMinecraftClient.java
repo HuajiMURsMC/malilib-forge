@@ -23,25 +23,11 @@ public abstract class MixinMinecraftClient
 
     private ClientWorld worldBefore;
 
-    @Inject(method = "<init>(Lnet/minecraft/client/RunArgs;)V", at = @At("RETURN"))
-    private void onInitComplete(RunArgs args, CallbackInfo ci)
-    {
-        // Register all mod handlers
-        ((InitializationHandler) InitializationHandler.getInstance()).onGameInitDone();
-    }
-
-    @Inject(method = "tick()V", at = @At("RETURN"))
-    private void onPostKeyboardInput(CallbackInfo ci)
-    {
-        KeybindMulti.reCheckPressedKeys();
-        TickHandler.getInstance().onClientTick((MinecraftClient)(Object) this);
-    }
-
     @Inject(method = "joinWorld(Lnet/minecraft/client/world/ClientWorld;)V", at = @At("HEAD"))
     private void onLoadWorldPre(@Nullable ClientWorld worldClientIn, CallbackInfo ci)
     {
         // Only handle dimension changes/respawns here.
-        // The initial join is handled in MixinClientPlayNetworkHandler onGameJoin 
+        // The initial join is handled in MixinClientPlayNetworkHandler onGameJoin
         if (this.world != null)
         {
             this.worldBefore = this.world;

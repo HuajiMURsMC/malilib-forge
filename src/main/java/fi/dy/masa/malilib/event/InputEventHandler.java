@@ -200,40 +200,28 @@ public class InputEventHandler implements IKeybindManager, IInputManager
     /**
      * NOT PUBLIC API - DO NOT CALL
      */
-    public boolean onMouseScroll(final int mouseX, final int mouseY, final double xOffset, final double yOffset)
+    public boolean onMouseScroll(final int mouseX, final int mouseY, final double amount)
     {
         boolean discrete = this.mc.options.getDiscreteMouseScroll().getValue();
         double sensitivity = this.mc.options.getMouseWheelSensitivity().getValue();
-        double amount = (discrete ? Math.signum(yOffset) : yOffset) * sensitivity;
 
         if (MaLiLibConfigs.Debug.MOUSE_SCROLL_DEBUG.getBooleanValue())
         {
             int time = (int) (System.currentTimeMillis() & 0xFFFF);
             int tick = this.mc.world != null ? (int) (this.mc.world.getTime() & 0xFFFF) : 0;
             String timeStr = String.format("time: %04X, tick: %04X", time, tick);
-            MaLiLib.logger.info("{} - xOffset: {}, yOffset: {}, discrete: {}, sensitivity: {}, amount: {}",
-                                timeStr, xOffset, yOffset, discrete, sensitivity, amount);
+            MaLiLib.logger.info("{} - discrete: {}, sensitivity: {}, amount: {}",
+                                timeStr, discrete, sensitivity, amount);
         }
 
-        if (amount != 0 && this.mouseHandlers.isEmpty() == false)
+        if (amount != 0)
         {
-            if (this.mouseWheelDeltaSum != 0.0 && Math.signum(amount) != Math.signum(this.mouseWheelDeltaSum))
+            if (!this.mouseHandlers.isEmpty())
             {
-                this.mouseWheelDeltaSum = 0.0;
-            }
-
-            this.mouseWheelDeltaSum += amount;
-            amount = (int) this.mouseWheelDeltaSum;
-
-            if (amount != 0.0)
-            {
-                this.mouseWheelDeltaSum -= amount;
-
                 for (IMouseInputHandler handler : this.mouseHandlers)
                 {
                     if (handler.onMouseScroll(mouseX, mouseY, amount))
                     {
-                        this.printInputCancellationDebugMessage(handler);
                         return true;
                     }
                 }

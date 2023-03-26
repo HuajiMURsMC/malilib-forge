@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Set;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import fi.dy.masa.malilib.MaLiLib;
 import fi.dy.masa.malilib.util.StringUtils;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ItemRestriction extends UsageRestriction<Item>
 {
@@ -25,7 +25,7 @@ public class ItemRestriction extends UsageRestriction<Item>
             {
             }
 
-            Item item = rl != null ? Registry.ITEM.get(rl) : null;
+            Item item = rl != null ? ForgeRegistries.ITEMS.getValue(rl) : null;
 
             if (item != null)
             {
